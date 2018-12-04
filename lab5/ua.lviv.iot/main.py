@@ -38,21 +38,23 @@ def fun(cur_letter, count):
     if cur_letter in letter_graph.keys():
         for obj in letter_graph[cur_letter]:
             count = fun(obj, count)
-    if (cur_letter == (str(height-1)+str(width-1))) or (cur_letter == ("0"+str(width-1))):
+    if (cur_letter == (str(height - 1) + str(width - 1))) or (cur_letter == ("0" + str(width - 1))):
         count += 1
     return count
 
 
 def search_start():
-    return fun('00', 0)
+    total_paths = 0
+    for start_brick in range(height):
+        total_paths += fun('0' + str(start_brick), 0)
+    return total_paths
 
 
 def read_data_from_file():
     lst = []
     try:
-        with open('ijones.in') as lngpok:
-            lines = [line.rstrip('\n') for line in lngpok]
-
+        with open('ijones.in') as ijones:
+            lines = [line.rstrip('\n') for line in ijones]
             for line in lines:
                 symbol = line.split(' ')
                 lst.append(symbol)
@@ -65,19 +67,18 @@ def ijones_algo(input_letters, width_matrix, height_matrix):
     graph = dict()
     for i in range(0, width_matrix):
         for j in range(0, height_matrix - 1):
-            lst = []
-            lst.append(str(i) + str(j + 1))
-            lst = find_same_letter(input_letters, lst, input_letters[i][j], width_matrix, height_matrix, i, j)
-            graph[str(i) + str(j)] = lst
+            letter_list = [str(i) + str(j + 1)]
+            letter_list = find_same_letter(input_letters, letter_list, input_letters[i][j], width_matrix, height_matrix, i, j)
+            graph[str(i) + str(j)] = letter_list
     return graph
 
 
-def find_same_letter(input_letters, lst, current_letter, width_matrix, height_matrix, cur_row, cur_column):
+def find_same_letter(input_letters, letter_list, current_letter, width_matrix, height_matrix, cur_row, cur_column):
     for i in range(0, height_matrix):
         for j in range(cur_column + 1, width_matrix):
             if (input_letters[i][j] == current_letter) and not ((i == cur_row) and (j == cur_column + 1)):
-                lst.append(str(i)+str(j))
-    return lst
+                letter_list.append(str(i) + str(j))
+    return letter_list
 
 
 if __name__ == '__main__':
